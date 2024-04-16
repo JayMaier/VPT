@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: VideoGPT
+Version: 1.0
+Summary: PyTorch package for VideoGPT
+Home-page: http://github.com/wilson1yan/VideoGPT
+Author: Wilson Yan
+Author-email: wilson1.yan@berkeley.edu
+License: BSD
+License-File: LICENSE

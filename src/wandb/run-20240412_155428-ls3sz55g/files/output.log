@@ -1,0 +1,22 @@
+
+step 0
+recon loss: 0.554
+validation recon loss 0.565
+validation EMA recon loss 0.565
+sample saved to results/sampled.0.gif
+step 1
+recon loss: 0.565
+step 2
+recon loss: 0.565
+step 3
+recon loss: 0.564
+step 4
+recon loss: 0.564
+step 5
+recon loss: 0.564
+step 6
+recon loss: 0.564
+step 7
+recon loss: 0.564
+step 8
+recon loss: 0.564

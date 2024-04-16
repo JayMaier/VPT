@@ -1,0 +1,22 @@
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Current SDK version is 0.16.6
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Configure stats pid to 1680206
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Loading settings from /home/jay/.config/wandb/settings
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Loading settings from /home/jay/VPT/src/wandb/settings
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'src/train_magvit.py', 'program_abspath': '/home/jay/VPT/src/train_magvit.py', 'program': '/home/jay/VPT/src/train_magvit.py'}
+2024-04-12 16:08:20,326 INFO    MainThread:1680206 [wandb_setup.py:_flush():76] Applying login settings: {}
+2024-04-12 16:08:20,327 INFO    MainThread:1680206 [wandb_init.py:_log_setup():521] Logging user logs to /home/jay/VPT/src/wandb/run-20240412_160820-gf72qatf/logs/debug.log
+2024-04-12 16:08:20,327 INFO    MainThread:1680206 [wandb_init.py:_log_setup():522] Logging internal logs to /home/jay/VPT/src/wandb/run-20240412_160820-gf72qatf/logs/debug-internal.log
+2024-04-12 16:08:20,327 INFO    MainThread:1680206 [wandb_init.py:init():561] calling init triggers
+2024-04-12 16:08:20,327 INFO    MainThread:1680206 [wandb_init.py:init():568] wandb.init called with sweep_config: {}
+config: {}
+2024-04-12 16:08:20,327 INFO    MainThread:1680206 [wandb_init.py:init():611] starting backend
+2024-04-12 16:08:20,327 INFO    MainThread:1680206 [wandb_init.py:init():615] setting up manager
+2024-04-12 16:08:20,328 INFO    MainThread:1680206 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-04-12 16:08:20,329 INFO    MainThread:1680206 [wandb_init.py:init():623] backend started and connected
+2024-04-12 16:08:20,331 INFO    MainThread:1680206 [wandb_init.py:init():715] updated telemetry
+2024-04-12 16:08:20,336 INFO    MainThread:1680206 [wandb_init.py:init():748] communicating run to backend with 90.0 second timeout
+2024-04-12 16:08:20,577 INFO    MainThread:1680206 [wandb_run.py:_on_init():2357] communicating current version
+2024-04-12 16:08:20,672 INFO    MainThread:1680206 [wandb_run.py:_on_init():2366] got version response 
+2024-04-12 16:08:20,673 INFO    MainThread:1680206 [wandb_init.py:init():799] starting run threads in backend

@@ -1,0 +1,1 @@
+{"total_loss": 1.3288859128952026, "recon_loss": 0.8138289451599121, "perceptual_loss": 1.5468648672103882, "adversarial_gen_loss": 0.06257113814353943, "_timestamp": 1712952533.1847086, "_runtime": 13.35947060585022, "_step": 1, "_wandb": {"runtime": 17}, "valid_recon_loss": 0.7921603322029114, "valid_ema_recon_loss": 0.7921603322029114}
