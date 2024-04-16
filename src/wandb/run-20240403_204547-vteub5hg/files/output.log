@@ -1,0 +1,33 @@
+
+step 0
+recon loss: 0.521
+discr loss: 2.031
+Traceback (most recent call last):
+  File "/home/jay/VPT/src/train_magvit.py", line 49, in <module>
+    trainer.train()
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 521, in train
+    self.valid_step(valid_dl_iter)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 461, in valid_step
+    valid_video, = next(dl_iter)
+                   ^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 57, in cycle
+    for data in dl:
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 674, in _next_data
+    index = self._next_index()  # may raise StopIteration
+            ^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 621, in _next_index
+    return next(self._sampler_iter)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/sampler.py", line 280, in __iter__
+    batch = [next(sampler_iter) for _ in range(self.batch_size)]
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/sampler.py", line 155, in __iter__
+    seed = int(torch.empty((), dtype=torch.int64).random_().item())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

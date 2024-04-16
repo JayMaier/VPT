@@ -80,7 +80,7 @@ class VideoTokenizerTrainer:
         checkpoint_every_step = 100,
         num_frames = 17,
         use_wandb_tracking = False,
-        discr_start_after_step = 0.,
+        discr_start_after_step = 100000000.,
         warmup_steps = 1000,
         scheduler: Optional[Type[LRScheduler]] = None,
         scheduler_kwargs: dict = dict(),

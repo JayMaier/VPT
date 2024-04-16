@@ -1,0 +1,844 @@
+
+step 0
+recon loss: 0.167
+discr loss: 1.976
+validation recon loss 0.269
+validation EMA recon loss 0.269
+sample saved to results/sampled.0.gif
+step 1
+recon loss: 0.196
+discr loss: 1.549
+step 2
+recon loss: 0.196
+discr loss: 1.909
+step 3
+recon loss: 0.196
+discr loss: 0.494
+step 4
+recon loss: 0.167
+discr loss: 0.131
+step 5
+recon loss: 0.040
+discr loss: 0.577
+step 6
+recon loss: 0.033
+discr loss: 0.106
+step 7
+recon loss: 0.040
+discr loss: 0.000
+step 8
+recon loss: 0.117
+discr loss: 0.000
+step 9
+recon loss: 0.196
+discr loss: 0.000
+step 10
+recon loss: 0.487
+discr loss: 1.059
+step 11
+recon loss: 0.033
+discr loss: 0.000
+step 12
+recon loss: 0.196
+discr loss: 0.000
+step 13
+recon loss: 0.167
+discr loss: 0.000
+step 14
+recon loss: 0.455
+discr loss: 0.000
+step 15
+recon loss: 0.040
+discr loss: 0.000
+step 16
+recon loss: 0.180
+discr loss: 0.000
+step 17
+recon loss: 0.487
+discr loss: 0.000
+step 18
+recon loss: 0.117
+discr loss: 0.000
+step 19
+recon loss: 0.035
+discr loss: 0.000
+step 20
+recon loss: 0.035
+discr loss: 0.000
+step 21
+recon loss: 0.040
+discr loss: 0.000
+step 22
+recon loss: 0.033
+discr loss: 1.187
+step 23
+recon loss: 0.040
+discr loss: 0.000
+step 24
+recon loss: 0.167
+discr loss: 1.564
+step 25
+recon loss: 0.487
+discr loss: 0.000
+step 26
+recon loss: 0.196
+discr loss: 0.519
+step 27
+recon loss: 0.377
+discr loss: 0.000
+step 28
+recon loss: 0.117
+discr loss: 0.741
+step 29
+recon loss: 0.455
+discr loss: 0.546
+step 30
+recon loss: 0.487
+discr loss: 0.000
+step 31
+recon loss: 0.033
+discr loss: 1.336
+step 32
+recon loss: 0.196
+discr loss: 0.000
+step 33
+recon loss: 0.196
+discr loss: 0.000
+step 34
+recon loss: 0.487
+discr loss: 0.000
+step 35
+recon loss: 0.167
+discr loss: 0.000
+step 36
+recon loss: 0.035
+discr loss: 0.000
+step 37
+recon loss: 0.180
+discr loss: 0.000
+step 38
+recon loss: 0.035
+discr loss: 0.468
+step 39
+recon loss: 0.196
+discr loss: 0.000
+step 40
+recon loss: 0.377
+discr loss: 0.000
+step 41
+recon loss: 0.117
+discr loss: 0.454
+step 42
+recon loss: 0.167
+discr loss: 0.859
+step 43
+recon loss: 0.455
+discr loss: 0.714
+step 44
+recon loss: 0.040
+discr loss: 0.047
+step 45
+recon loss: 0.033
+discr loss: 0.000
+step 46
+recon loss: 0.487
+discr loss: 0.000
+step 47
+recon loss: 0.455
+discr loss: 0.000
+step 48
+recon loss: 0.487
+discr loss: 0.000
+step 49
+recon loss: 0.117
+discr loss: 0.000
+step 50
+recon loss: 0.035
+discr loss: 0.000
+step 51
+recon loss: 0.167
+discr loss: 0.000
+step 52
+recon loss: 0.035
+discr loss: 0.000
+step 53
+recon loss: 0.377
+discr loss: 0.000
+step 54
+recon loss: 0.167
+discr loss: 0.000
+step 55
+recon loss: 0.035
+discr loss: 0.000
+step 56
+recon loss: 0.377
+discr loss: 0.000
+step 57
+recon loss: 0.117
+discr loss: 0.000
+step 58
+recon loss: 0.487
+discr loss: 0.000
+step 59
+recon loss: 0.040
+discr loss: 0.000
+step 60
+recon loss: 0.167
+discr loss: 0.000
+step 61
+recon loss: 0.487
+discr loss: 6.474
+step 62
+recon loss: 0.040
+discr loss: 0.000
+step 63
+recon loss: 0.377
+discr loss: 0.000
+step 64
+recon loss: 0.487
+discr loss: 0.000
+step 65
+recon loss: 0.035
+discr loss: 0.000
+step 66
+recon loss: 0.033
+discr loss: 0.000
+step 67
+recon loss: 0.196
+discr loss: 0.000
+step 68
+recon loss: 0.377
+discr loss: 0.000
+step 69
+recon loss: 0.487
+discr loss: 0.000
+step 70
+recon loss: 0.487
+discr loss: 0.000
+step 71
+recon loss: 0.180
+discr loss: 0.000
+step 72
+recon loss: 0.487
+discr loss: 0.000
+step 73
+recon loss: 0.040
+discr loss: 0.000
+step 74
+recon loss: 0.376
+discr loss: 0.000
+step 75
+recon loss: 0.180
+discr loss: 0.000
+step 76
+recon loss: 0.117
+discr loss: 0.000
+step 77
+recon loss: 0.035
+discr loss: 0.000
+step 78
+recon loss: 0.376
+discr loss: 0.000
+step 79
+recon loss: 0.035
+discr loss: 0.000
+step 80
+recon loss: 0.167
+discr loss: 0.000
+step 81
+recon loss: 0.035
+discr loss: 0.000
+step 82
+recon loss: 0.376
+discr loss: 0.000
+step 83
+recon loss: 0.040
+discr loss: 0.000
+step 84
+recon loss: 0.376
+discr loss: 0.000
+step 85
+recon loss: 0.167
+discr loss: 0.000
+step 86
+recon loss: 0.487
+discr loss: 0.000
+step 87
+recon loss: 0.117
+discr loss: 0.000
+step 88
+recon loss: 0.035
+discr loss: 0.000
+step 89
+recon loss: 0.179
+discr loss: 0.000
+step 90
+recon loss: 0.454
+discr loss: 0.000
+step 91
+recon loss: 0.487
+discr loss: 0.000
+step 92
+recon loss: 0.117
+discr loss: 0.000
+step 93
+recon loss: 0.035
+discr loss: 0.000
+step 94
+recon loss: 0.487
+discr loss: 0.000
+step 95
+recon loss: 0.040
+discr loss: 0.000
+step 96
+recon loss: 0.454
+discr loss: 0.000
+step 97
+recon loss: 0.196
+discr loss: 0.000
+step 98
+recon loss: 0.179
+discr loss: 0.000
+step 99
+recon loss: 0.454
+discr loss: 0.000
+step 100
+recon loss: 0.454
+discr loss: 0.000
+validation recon loss 0.269
+validation EMA recon loss 0.269
+sample saved to results/sampled.1.gif
+step 101
+recon loss: 0.196
+discr loss: 0.000
+step 102
+recon loss: 0.040
+discr loss: 0.000
+step 103
+recon loss: 0.376
+discr loss: 0.000
+step 104
+recon loss: 0.035
+discr loss: 0.769
+step 105
+recon loss: 0.040
+discr loss: 0.000
+step 106
+recon loss: 0.040
+discr loss: 0.000
+step 107
+recon loss: 0.196
+discr loss: 0.000
+step 108
+recon loss: 0.035
+discr loss: 0.000
+step 109
+recon loss: 0.040
+discr loss: 0.000
+step 110
+recon loss: 0.166
+discr loss: 0.000
+step 111
+recon loss: 0.035
+discr loss: 0.000
+step 112
+recon loss: 0.033
+discr loss: 0.000
+step 113
+recon loss: 0.454
+discr loss: 0.000
+step 114
+recon loss: 0.179
+discr loss: 0.000
+step 115
+recon loss: 0.376
+discr loss: 0.000
+step 116
+recon loss: 0.486
+discr loss: 0.000
+step 117
+recon loss: 0.040
+discr loss: 0.000
+step 118
+recon loss: 0.117
+discr loss: 0.000
+step 119
+recon loss: 0.166
+discr loss: 0.000
+step 120
+recon loss: 0.179
+discr loss: 0.000
+step 121
+recon loss: 0.166
+discr loss: 0.000
+step 122
+recon loss: 0.376
+discr loss: 0.000
+step 123
+recon loss: 0.376
+discr loss: 0.000
+step 124
+recon loss: 0.179
+discr loss: 0.000
+step 125
+recon loss: 0.376
+discr loss: 0.000
+step 126
+recon loss: 0.196
+discr loss: 1.852
+step 127
+recon loss: 0.166
+discr loss: 0.960
+step 128
+recon loss: 0.033
+discr loss: 0.979
+step 129
+recon loss: 0.035
+discr loss: 0.570
+step 130
+recon loss: 0.166
+discr loss: 1.093
+step 131
+recon loss: 0.179
+discr loss: 1.371
+step 132
+recon loss: 0.196
+discr loss: 1.326
+step 133
+recon loss: 0.116
+discr loss: 0.000
+step 134
+recon loss: 0.453
+discr loss: 0.000
+step 135
+recon loss: 0.196
+discr loss: 1.264
+step 136
+recon loss: 0.486
+discr loss: 0.000
+step 137
+recon loss: 0.179
+discr loss: 0.553
+step 138
+recon loss: 0.166
+discr loss: 0.000
+step 139
+recon loss: 0.196
+discr loss: 0.000
+step 140
+recon loss: 0.033
+discr loss: 0.000
+step 141
+recon loss: 0.179
+discr loss: 0.485
+step 142
+recon loss: 0.116
+discr loss: 0.000
+step 143
+recon loss: 0.453
+discr loss: 0.000
+step 144
+recon loss: 0.166
+discr loss: 0.000
+step 145
+recon loss: 0.453
+discr loss: 0.000
+step 146
+recon loss: 0.196
+discr loss: 0.000
+step 147
+recon loss: 0.034
+discr loss: 0.000
+step 148
+recon loss: 0.034
+discr loss: 0.000
+step 149
+recon loss: 0.035
+discr loss: 0.000
+step 150
+recon loss: 0.179
+discr loss: 0.000
+step 151
+recon loss: 0.195
+discr loss: 0.000
+step 152
+recon loss: 0.166
+discr loss: 0.000
+step 153
+recon loss: 0.453
+discr loss: 0.000
+step 154
+recon loss: 0.166
+discr loss: 0.000
+step 155
+recon loss: 0.116
+discr loss: 0.000
+step 156
+recon loss: 0.034
+discr loss: 0.000
+step 157
+recon loss: 0.116
+discr loss: 0.000
+step 158
+recon loss: 0.035
+discr loss: 0.000
+step 159
+recon loss: 0.375
+discr loss: 0.000
+step 160
+recon loss: 0.035
+discr loss: 0.000
+step 161
+recon loss: 0.035
+discr loss: 1.087
+step 162
+recon loss: 0.485
+discr loss: 0.000
+step 163
+recon loss: 0.116
+discr loss: 0.000
+step 164
+recon loss: 0.034
+discr loss: 0.000
+step 165
+recon loss: 0.485
+discr loss: 0.000
+step 166
+recon loss: 0.178
+discr loss: 0.000
+step 167
+recon loss: 0.375
+discr loss: 0.000
+step 168
+recon loss: 0.116
+discr loss: 0.000
+step 169
+recon loss: 0.195
+discr loss: 0.000
+step 170
+recon loss: 0.375
+discr loss: 0.000
+step 171
+recon loss: 0.178
+discr loss: 0.000
+step 172
+recon loss: 0.116
+discr loss: 0.000
+step 173
+recon loss: 0.195
+discr loss: 0.000
+step 174
+recon loss: 0.035
+discr loss: 0.000
+step 175
+recon loss: 0.375
+discr loss: 0.000
+step 176
+recon loss: 0.485
+discr loss: 3.346
+step 177
+recon loss: 0.166
+discr loss: 0.000
+step 178
+recon loss: 0.040
+discr loss: 0.000
+step 179
+recon loss: 0.040
+discr loss: 0.000
+step 180
+recon loss: 0.035
+discr loss: 0.000
+step 181
+recon loss: 0.452
+discr loss: 0.000
+step 182
+recon loss: 0.116
+discr loss: 0.000
+step 183
+recon loss: 0.452
+discr loss: 0.000
+step 184
+recon loss: 0.452
+discr loss: 0.000
+step 185
+recon loss: 0.485
+discr loss: 0.000
+step 186
+recon loss: 0.036
+discr loss: 0.000
+step 187
+recon loss: 0.375
+discr loss: 0.000
+step 188
+recon loss: 0.036
+discr loss: 0.000
+step 189
+recon loss: 0.035
+discr loss: 0.000
+step 190
+recon loss: 0.374
+discr loss: 0.000
+step 191
+recon loss: 0.374
+discr loss: 0.000
+step 192
+recon loss: 0.116
+discr loss: 0.000
+step 193
+recon loss: 0.035
+discr loss: 0.000
+step 194
+recon loss: 0.035
+discr loss: 0.000
+step 195
+recon loss: 0.116
+discr loss: 0.000
+step 196
+recon loss: 0.195
+discr loss: 0.000
+step 197
+recon loss: 0.035
+discr loss: 0.000
+step 198
+recon loss: 0.484
+discr loss: 0.000
+step 199
+recon loss: 0.115
+discr loss: 0.000
+step 200
+recon loss: 0.484
+discr loss: 0.000
+validation recon loss 0.267
+validation EMA recon loss 0.268
+sample saved to results/sampled.2.gif
+step 201
+recon loss: 0.374
+discr loss: 1.227
+step 202
+recon loss: 0.374
+discr loss: 0.000
+step 203
+recon loss: 0.374
+discr loss: 0.000
+step 204
+recon loss: 0.039
+discr loss: 0.254
+step 205
+recon loss: 0.115
+discr loss: 0.000
+step 206
+recon loss: 0.374
+discr loss: 0.000
+step 207
+recon loss: 0.374
+discr loss: 0.000
+step 208
+recon loss: 0.484
+discr loss: 0.000
+step 209
+recon loss: 0.035
+discr loss: 0.000
+step 210
+recon loss: 0.039
+discr loss: 0.000
+step 211
+recon loss: 0.194
+discr loss: 0.000
+step 212
+recon loss: 0.451
+discr loss: 0.000
+step 213
+recon loss: 0.039
+discr loss: 0.000
+step 214
+recon loss: 0.039
+discr loss: 0.000
+step 215
+recon loss: 0.115
+discr loss: 0.000
+step 216
+recon loss: 0.035
+discr loss: 0.000
+step 217
+recon loss: 0.034
+discr loss: 0.000
+step 218
+recon loss: 0.034
+discr loss: 0.000
+step 219
+recon loss: 0.034
+discr loss: 0.000
+step 220
+recon loss: 0.165
+discr loss: 0.000
+step 221
+recon loss: 0.450
+discr loss: 0.000
+step 222
+recon loss: 0.450
+discr loss: 0.000
+step 223
+recon loss: 0.115
+discr loss: 0.000
+step 224
+recon loss: 0.177
+discr loss: 0.000
+step 225
+recon loss: 0.177
+discr loss: 0.000
+step 226
+recon loss: 0.034
+discr loss: 0.000
+step 227
+recon loss: 0.194
+discr loss: 0.000
+step 228
+recon loss: 0.373
+discr loss: 0.000
+step 229
+recon loss: 0.450
+discr loss: 0.000
+step 230
+recon loss: 0.177
+discr loss: 3.217
+step 231
+recon loss: 0.039
+discr loss: 0.000
+step 232
+recon loss: 0.177
+discr loss: 0.843
+step 233
+recon loss: 0.194
+discr loss: 0.000
+step 234
+recon loss: 0.194
+discr loss: 0.000
+step 235
+recon loss: 0.450
+discr loss: 0.204
+step 236
+recon loss: 0.115
+discr loss: 0.293
+step 237
+recon loss: 0.177
+discr loss: 0.000
+step 238
+recon loss: 0.194
+discr loss: 0.000
+step 239
+recon loss: 0.035
+discr loss: 0.000
+step 240
+recon loss: 0.039
+discr loss: 0.000
+step 241
+recon loss: 0.034
+discr loss: 0.000
+step 242
+recon loss: 0.035
+discr loss: 0.000
+step 243
+recon loss: 0.115
+discr loss: 0.000
+step 244
+recon loss: 0.039
+discr loss: 0.000
+step 245
+recon loss: 0.482
+discr loss: 0.000
+step 246
+recon loss: 0.034
+discr loss: 0.000
+step 247
+recon loss: 0.115
+discr loss: 0.000
+step 248
+recon loss: 0.449
+discr loss: 0.000
+step 249
+recon loss: 0.372
+discr loss: 0.000
+step 250
+recon loss: 0.449
+discr loss: 0.000
+step 251
+recon loss: 0.164
+discr loss: 0.000
+step 252
+recon loss: 0.034
+discr loss: 0.000
+step 253
+recon loss: 0.035
+discr loss: 0.000
+step 254
+recon loss: 0.193
+discr loss: 0.000
+step 255
+recon loss: 0.039
+discr loss: 0.000
+step 256
+recon loss: 0.035
+discr loss: 0.000
+step 257
+recon loss: 0.482
+discr loss: 0.000
+step 258
+recon loss: 0.449
+discr loss: 0.000
+step 259
+recon loss: 0.372
+discr loss: 0.000
+step 260
+recon loss: 0.035
+discr loss: 0.000
+step 261
+recon loss: 0.035
+discr loss: 0.000
+step 262
+recon loss: 0.176
+discr loss: 0.000
+step 263
+recon loss: 0.449
+discr loss: 0.000
+step 264
+recon loss: 0.372
+discr loss: 0.000
+step 265
+recon loss: 0.114
+discr loss: 0.000
+step 266
+recon loss: 0.176
+discr loss: 0.000
+step 267
+recon loss: 0.481
+discr loss: 0.000
+step 268
+recon loss: 0.372
+discr loss: 0.000
+step 269
+Traceback (most recent call last):
+  File "/home/jay/VPT/src/train_magvit.py", line 46, in <module>
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 516, in train
+    self.train_step(dl_iter)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 349, in train_step
+    loss, loss_breakdown = self.model(
+                           ^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/pytorch_custom_utils/accelerate_utils.py", line 84, in __call__
+    return call_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<@beartype(magvit2_pytorch.magvit2_pytorch.VideoTokenizer.forward) at 0x7fb4700eef20>", line 55, in forward
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/magvit2_pytorch.py", line 1786, in forward
+    input_vgg_input = pick_video_frame(video, frame_indices)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/magvit2_pytorch.py", line 94, in pick_video_frame
+    images = rearrange(images, 'b 1 c ... -> b c ...')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/einops/einops.py", line 536, in rearrange
+    def rearrange(tensor: Union[Tensor, List[Tensor]], pattern: str, **axes_lengths) -> Tensor:
+KeyboardInterrupt

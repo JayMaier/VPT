@@ -1,0 +1,47 @@
+
+step 0
+recon loss: 0.594
+validation recon loss 0.594
+validation EMA recon loss 0.594
+sample saved to results/sampled.0.gif
+step 1
+recon loss: 0.594
+step 2
+recon loss: 0.594
+step 3
+recon loss: 0.594
+step 4
+recon loss: 0.594
+step 5
+Traceback (most recent call last):
+  File "/home/jay/VPT/src/train_magvit.py", line 50, in <module>
+    trainer.train()
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 516, in train
+    self.train_step(dl_iter)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 346, in train_step
+    data, *_ = next(dl_iter)
+               ^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 57, in cycle
+    for data in dl:
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/accelerate/data_loader.py", line 462, in __iter__
+    next_batch = next(dataloader_iter)
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 675, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 49, in fetch
+    data = self.dataset.__getitems__(possibly_batched_index)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/utils/data/dataset.py", line 399, in __getitems__
+    return [self.dataset[self.indices[idx]] for idx in indices]
+            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/data.py", line 281, in __getitem__
+    tensor = self.mp4_to_tensor(path_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/data.py", line 174, in video_to_tensor
+    check, frame = video.read()
+                   ^^^^^^^^^^^^
+KeyboardInterrupt
