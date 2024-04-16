@@ -13,6 +13,7 @@ import pytorch_lightning as pl
 from .resnet import resnet34
 from .attention import AttentionStack, LayerNorm, AddBroadcastPosEmbed
 from .utils import shift_dim
+import ipdb
 
 
 class VideoGPT(pl.LightningModule):
@@ -116,19 +117,21 @@ class VideoGPT(pl.LightningModule):
 
         return samples # BCTHW in [0, 1]
     
-    def sample_frame(self, n, batch=None):
+    def sample_frame(self, n, frame, batch=None):
         device = self.fc_in.weight.device
 
         cond = dict()
-        if self.use_frame_cond or self.args.class_cond:
-            assert batch is not None
-            video = batch['video']
+        # ipdb.set_trace()
+        cond['frame_cond'] = frame.unsqueeze(0).unsqueeze(2).cuda()
+        # if self.use_frame_cond or self.args.class_cond:
+        #     assert batch is not None
+        #     video = batch['video']
 
-            if self.args.class_cond:
-                label = batch['label']
-                cond['class_cond'] = F.one_hot(label, self.args.class_cond_dim).type_as(video)
-            if self.use_frame_cond:
-                cond['frame_cond'] = video[:, :, :self.args.n_cond_frames]
+        #     if self.args.class_cond:
+        #         label = batch['label']
+        #         cond['class_cond'] = F.one_hot(label, self.args.class_cond_dim).type_as(video)
+        #     if self.use_frame_cond:
+        #         cond['frame_cond'] = video[:, :, :self.args.n_cond_frames]
 
         samples = torch.zeros((n,) + self.shape).long().to(device)
         idxs = list(itertools.product(*[range(s) for s in self.shape]))
@@ -157,8 +160,8 @@ class VideoGPT(pl.LightningModule):
                 samples[batch_idx] = torch.multinomial(probs, 1).squeeze(-1)
 
                 prev_idx = batch_idx_slice
-            samples = self.vqvae.decode(samples)
-            samples = torch.clamp(samples, -0.5, 0.5) + 0.5
+            # samples = self.vqvae.decode(samples)
+            # samples = torch.clamp(samples, -0.5, 0.5) + 0.5
 
         return samples # BCTHW in [0, 1]
 
