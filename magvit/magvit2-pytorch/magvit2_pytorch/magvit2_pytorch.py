@@ -21,7 +21,8 @@ from einops import rearrange, repeat, reduce, pack, unpack
 from einops.layers.torch import Rearrange
 
 from beartype import beartype
-from beartype.typing import Union, Tuple, Optional, List
+from beartype.t
+yping import Union, Tuple, Optional, List
 
 from magvit2_pytorch.attend import Attend
 from magvit2_pytorch.version import __version__
