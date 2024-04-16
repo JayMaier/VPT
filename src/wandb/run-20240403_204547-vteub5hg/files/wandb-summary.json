@@ -1,0 +1,1 @@
+{"_wandb": {"runtime": 160}, "total_loss": 0.10272216796875, "recon_loss": 0.5209835171699524, "perceptual_loss": 0.7396268844604492, "adversarial_gen_loss": -0.035879191011190414, "_timestamp": 1712191556.4702775, "discr_loss": 2.0305051803588867, "gradient_penalty": 0.9858759045600891, "_runtime": 8.691528558731079, "_step": 0}

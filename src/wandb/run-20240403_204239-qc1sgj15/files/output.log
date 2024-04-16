@@ -1,0 +1,85 @@
+
+step 0
+recon loss: 0.569
+discr loss: 2.068
+validation recon loss 0.569
+validation EMA recon loss 0.569
+sample saved to results/sampled.0.gif
+step 1
+recon loss: 0.569
+discr loss: 1.592
+step 2
+recon loss: 0.569
+discr loss: 1.030
+step 3
+recon loss: 0.569
+discr loss: 0.493
+step 4
+recon loss: 0.569
+discr loss: 0.156
+step 5
+recon loss: 0.569
+discr loss: 0.000
+step 6
+recon loss: 0.569
+discr loss: 0.000
+step 7
+recon loss: 0.569
+discr loss: 0.000
+step 8
+recon loss: 0.569
+discr loss: 0.000
+step 9
+recon loss: 0.569
+discr loss: 0.000
+step 10
+recon loss: 0.569
+discr loss: 0.011
+step 11
+recon loss: 0.569
+discr loss: 0.000
+step 12
+recon loss: 0.569
+discr loss: 0.000
+step 13
+recon loss: 0.569
+discr loss: 0.000
+step 14
+recon loss: 0.569
+discr loss: 0.000
+step 15
+recon loss: 0.569
+discr loss: 0.319
+step 16
+recon loss: 0.569
+discr loss: 0.000
+step 17
+recon loss: 0.569
+discr loss: 0.000
+step 18
+recon loss: 0.569
+discr loss: 0.000
+step 19
+recon loss: 0.569
+discr loss: 0.000
+step 20
+recon loss: 0.569
+discr loss: 0.000
+step 21
+recon loss: 0.569
+discr loss: 0.000
+step 22
+Traceback (most recent call last):
+  File "/home/jay/VPT/src/train_magvit.py", line 49, in <module>
+    trainer.train()
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 516, in train
+    self.train_step(dl_iter)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 356, in train_step
+    self.accelerator.backward(loss / self.grad_accum_every)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/accelerate/accelerator.py", line 2001, in backward
+    loss.backward(**kwargs)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/_tensor.py", line 522, in backward
+    torch.autograd.backward(
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/autograd/__init__.py", line 266, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

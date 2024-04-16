@@ -1,0 +1,98 @@
+
+step 0
+recon loss: 0.726
+discr loss: 2.062
+validation recon loss 0.483
+validation EMA recon loss 0.483
+sample saved to results/sampled.0.gif
+step 1
+recon loss: 0.074
+discr loss: 1.445
+step 2
+recon loss: 0.249
+discr loss: 0.877
+step 3
+recon loss: 0.726
+discr loss: 0.432
+step 4
+recon loss: 0.699
+discr loss: 0.483
+step 5
+recon loss: 0.609
+discr loss: 0.000
+step 6
+recon loss: 0.726
+discr loss: 0.055
+step 7
+recon loss: 0.344
+discr loss: 0.000
+step 8
+recon loss: 0.109
+discr loss: 0.000
+step 9
+recon loss: 0.332
+discr loss: 0.000
+step 10
+recon loss: 0.249
+discr loss: 0.000
+step 11
+recon loss: 0.332
+discr loss: 0.000
+step 12
+recon loss: 0.344
+discr loss: 0.000
+step 13
+recon loss: 0.726
+discr loss: 0.000
+step 14
+recon loss: 0.077
+discr loss: 0.000
+step 15
+recon loss: 0.077
+discr loss: 0.000
+step 16
+recon loss: 0.332
+discr loss: 0.000
+step 17
+recon loss: 0.378
+discr loss: 0.000
+step 18
+recon loss: 0.249
+discr loss: 0.000
+step 19
+recon loss: 0.726
+discr loss: 0.000
+step 20
+recon loss: 0.077
+discr loss: 0.000
+step 21
+recon loss: 0.378
+discr loss: 0.000
+step 22
+Traceback (most recent call last):
+  File "/home/jay/VPT/src/train_magvit.py", line 46, in <module>
+    trainer.train()
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 516, in train
+    self.train_step(dl_iter)
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/trainer.py", line 349, in train_step
+    loss, loss_breakdown = self.model(
+                           ^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/pytorch_custom_utils/accelerate_utils.py", line 84, in __call__
+    return call_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<@beartype(magvit2_pytorch.magvit2_pytorch.VideoTokenizer.forward) at 0x7f6103f26f20>", line 55, in forward
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/magvit2_pytorch.py", line 1786, in forward
+    input_vgg_input = pick_video_frame(video, frame_indices)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/magvit2_pytorch/magvit2_pytorch.py", line 94, in pick_video_frame
+    images = rearrange(images, 'b 1 c ... -> b c ...')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jay/anaconda3/envs/magvit/lib/python3.12/site-packages/einops/einops.py", line 536, in rearrange
+    def rearrange(tensor: Union[Tensor, List[Tensor]], pattern: str, **axes_lengths) -> Tensor:
+KeyboardInterrupt

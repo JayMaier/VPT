@@ -1,0 +1,188 @@
+{
+    "os": "Linux-5.15.0-101-generic-x86_64-with-glibc2.31",
+    "python": "3.12.2",
+    "heartbeatAt": "2024-04-12T20:34:14.141950",
+    "startedAt": "2024-04-12T20:34:13.691462",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/jay/VPT/src/train_magvit.py",
+    "codePathLocal": "train_magvit.py",
+    "codePath": "src/train_magvit.py",
+    "git": {
+        "remote": "git@github.com:JayMaier/VPT.git",
+        "commit": "133ee049189c562962fe97d8428b0aa14359e823"
+    },
+    "email": "jamesmai@andre.cmu.edu",
+    "root": "/home/jay/VPT",
+    "host": "jay-ws",
+    "username": "jay",
+    "executable": "/home/jay/anaconda3/envs/magvit/bin/python3",
+    "cpu_count": 14,
+    "cpu_count_logical": 28,
+    "cpu_freq": {
+        "current": 3023.103071428571,
+        "min": 1200.0,
+        "max": 4314.285714285715
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4400.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 1575.185,
+            "min": 1200.0,
+            "max": 4400.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4400.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4400.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        },
+        {
+            "current": 3100.0,
+            "min": 1200.0,
+            "max": 4300.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 456.3903579711914,
+            "used": 150.77094268798828
+        }
+    },
+    "gpu": "Quadro P5000",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "Quadro P5000",
+            "memory_total": 16106127360
+        }
+    ],
+    "memory": {
+        "total": 62.47894287109375
+    }
+}
