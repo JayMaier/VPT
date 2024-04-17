@@ -83,7 +83,7 @@ def dice_loss(input, target, multiclass: bool = False):
     fn = multiclass_dice_coeff if multiclass else dice_coeff
     return 1 - fn(input, target, reduce_batch_first=True)
     
-def loss(pred, gt, n_classes = 2):
+def loss(pred, gt, n_classes):
 
     # if n_classes == 1:
     #     crit_2 = dice_loss(F.sigmoid(pred.squeeze(1)), gt.float(), multiclass=False)
@@ -93,7 +93,8 @@ def loss(pred, gt, n_classes = 2):
     #         F.one_hot(gt, n_classes).permute(0, 3, 1, 2).float(),
     #         multiclass=True
     #     )
-    pos_weights = torch.ones_like(gt)
+    weight = 1 / (torch.mean(gt))
+    pos_weights = torch.full((n_classes,), weight)
     #ipdb.set_trace()
     crit_1 = nn.BCEWithLogitsLoss(pos_weight= pos_weights)
     loss = crit_1(pred, gt.cuda())# + crit_2
@@ -139,8 +140,6 @@ class Coco_Dataset(Dataset):
         mask = torch.tensor(mask)
         mask = mask.clamp(0, 1)
         return image, mask
-        
-        
 
 
 transform = transforms.Compose([
@@ -153,6 +152,7 @@ transform = transforms.Compose([
 def train(encoder,
         decoder,   
         device,
+        n_classes,
         epochs: int = 5,
         batch_size: int = 1,
         learning_rate: float = 1e-5,
@@ -165,7 +165,8 @@ def train(encoder,
         val_images_dir=None,
         show_mask_every = 1, 
         val_mask_dir=None,
-        dir_checkpoint=None,):
+        dir_checkpoint=None,
+        ):
     
     
     # dataset = SegmentationDataset(root_dir='path/to/dataset', transform=transform)
@@ -196,7 +197,7 @@ def train(encoder,
             enc_out = encoder.sample_frame(batch_size, image)
             dec_out = decoder(enc_out)
             #change the image mask
-            loss_val = loss(dec_out, mask)
+            loss_val = loss(dec_out, mask, n_classes)
 
             optimizer.zero_grad()
 
@@ -233,8 +234,8 @@ def train(encoder,
 
 
 if __name__ == "__main__":
-     
-    decoder = seghead(n_classes= 2).cuda()
+    n_classes = 2
+    decoder = seghead(n_classes= n_classes).cuda()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     parser = argparse.ArgumentParser()
@@ -253,10 +254,12 @@ if __name__ == "__main__":
     train(gpt,
         decoder,   
         device,
+        n_classes = n_classes
         epochs = 5,
         batch_size = 1,
         learning_rate = 1e-5,
-        val_frequency = 0.5)
+        val_frequency = 0.5,
+        )
     
 
 
