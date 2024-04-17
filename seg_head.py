@@ -18,6 +18,7 @@ import argparse
 import torchvision
 import ipdb
 import pycocotools
+from datasets import *
 
 class seghead(nn.Module):
     def __init__(self, n_classes):
@@ -101,45 +102,48 @@ def loss(pred, gt, n_classes):
     return loss
 
 
-class Coco_Dataset(Dataset):
-    def __init__(self, img_dir, anno_file, transform=None):
-        self.img_dir = img_dir
-        self.anno_file = anno_file
-        self.coco = pycocotools.coco.COCO(anno_file)
-        self.cat_ids = self.coco.getCatIds()
-        self.im2float = torchvision.transforms.ConvertImageDtype(torch.float32)
+# class Coco_Dataset(Dataset):
+#     def __init__(self, img_dir, anno_file, transform=None):
+#         self.img_dir = img_dir
+#         self.anno_file = anno_file
+#         self.coco = pycocotools.coco.COCO(anno_file)
+#         self.cat_ids = self.coco.getCatIds()
+#         self.im2float = torchvision.transforms.ConvertImageDtype(torch.float32)
         
-    def __len__(self):
-        return len(self.coco.imgs)
+#     def __len__(self):
+#         return len(self.coco.imgs)
     
-    def __getitem__(self, index):
-        index = 0
-        img = self.coco.imgs[index]
-        # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
-        image = torchvision.io.read_image(os.path.join(self.img_dir, img['file_name']))
-        image = self.im2float(image)
+#     def __getitem__(self, index):
+#         index = 0
+#         img = self.coco.imgs[index]
+#         # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
+#         image = torchvision.io.read_image(os.path.join(self.img_dir, img['file_name']))
+#         image = self.im2float(image)
         
-        anns_ids_1 = self.coco.getAnnIds(imgIds=img['id'], catIds=1, iscrowd=None)
-        anns_1 = self.coco.loadAnns(anns_ids_1)
+#         anns_ids_1 = self.coco.getAnnIds(imgIds=img['id'], catIds=1, iscrowd=None)
+#         anns_1 = self.coco.loadAnns(anns_ids_1)
         
 
-        anns_ids_2 = self.coco.getAnnIds(imgIds=img['id'], catIds=2, iscrowd=None)
-        anns_2 = self.coco.loadAnns(anns_ids_2)
-        ### TODO: DANGER!!! do we get every class every time ? ###
-        mask = np.zeros((len(self.cat_ids)-1, image.shape[1], image.shape[2]))
-        # mask = self.coco.annToMask(anns[0])
-        # print('cat ids', self.cat_ids)
-        # ipdb.set_trace()
+#         anns_ids_2 = self.coco.getAnnIds(imgIds=img['id'], catIds=2, iscrowd=None)
+#         anns_2 = self.coco.loadAnns(anns_ids_2)
+#         ### TODO: DANGER!!! do we get every class every time ? ###
+#         mask = np.zeros((len(self.cat_ids)-1, image.shape[1], image.shape[2]))
+#         # mask = self.coco.annToMask(anns[0])
+#         # print('cat ids', self.cat_ids)
+#         # ipdb.set_trace()
         
-        for i in range(0, len(anns_1)):
-            mask[0] += self.coco.annToMask(anns_1[i])
+#         for i in range(0, len(anns_1)):
+#             mask[0] += self.coco.annToMask(anns_1[i])
 
-        for i in range(0, len(anns_2)):
-            mask[1] += self.coco.annToMask(anns_2[i])
+#         for i in range(0, len(anns_2)):
+#             mask[1] += self.coco.annToMask(anns_2[i])
         
-        mask = torch.tensor(mask)
-        mask = mask.clamp(0, 1)
-        return image, mask
+#         mask = torch.tensor(mask)
+#         mask = mask.clamp(0, 1)
+#         return image, mask
+
+        
+        
 
 
 transform = transforms.Compose([
@@ -174,7 +178,7 @@ def train(encoder,
     train_set = torchvision.datasets.CocoDetection(root = 'data/mini/train',
                                                    annFile= 'data/mini/train/_annotations.coco.json')
     # ipdb.set_trace()
-    coco_set = Coco_Dataset(img_dir='data/mini/train',
+    coco_set = Coco_Dataset_Embeddings(img_dir='data/mini/train',
                            anno_file='data/mini/train/_annotations.coco.json')
     # ipdb.set_trace()
     

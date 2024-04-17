@@ -122,7 +122,7 @@ class VideoGPT(pl.LightningModule):
 
         cond = dict()
         # ipdb.set_trace()
-        cond['frame_cond'] = frame.unsqueeze(0).unsqueeze(2).cuda()
+        cond['frame_cond'] = frame.unsqueeze(2).cuda()
         # if self.use_frame_cond or self.args.class_cond:
         #     assert batch is not None
         #     video = batch['video']
