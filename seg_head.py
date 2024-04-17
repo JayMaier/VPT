@@ -1,3 +1,5 @@
+# https://stackoverflow.com/questions/50805634/how-to-create-mask-images-from-coco-dataset
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -9,6 +11,13 @@ import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
+
+from videogpt import VideoData, VideoGPT, load_videogpt
+from videogpt.utils import save_video_grid
+import argparse
+import torchvision
+import ipdb
+import pycocotools
 
 class seghead(nn.Module):
     def __init__(self, n_classes):
@@ -74,6 +83,39 @@ def loss(pred, gt, n_classes = 2):
     loss = crit_1(pred, gt) + crit_2
     return loss
 
+
+class CocoDataset(Dataset):
+    def __init__(self, img_dir, anno_file, transform=None):
+        self.img_dir = img_dir
+        self.anno_file = anno_file
+        self.coco = pycocotools.coco.COCO(anno_file)
+        self.cat_ids = self.coco.getCatIds()
+        self.im2float = torchvision.transforms.ConvertImageDtype(torch.float32)
+        
+    def __len__(self):
+        return len(self.coco.imgs)
+    
+    def __getitem__(self, index):
+        img = self.coco.imgs[index]
+        # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
+        image = torchvision.io.read_image(os.path.join(self.img_dir, img['file_name']))
+        image = self.im2float(image)
+        
+        anns_ids = self.coco.getAnnIds(imgIds=img['id'], catIds=self.cat_ids, iscrowd=None)
+        anns = self.coco.loadAnns(anns_ids)
+        
+        ### TODO: DANGER!!! do we get every class every time ? ###
+        mask = np.zeros((len(anns), image.shape[1], image.shape[2]))
+        # mask = self.coco.annToMask(anns[0])
+        for i in range(0, len(anns)):
+            mask[i] += self.coco.annToMask(anns[i])
+            
+        mask = torch.tensor(mask)
+        return image, mask
+        
+        
+        
+        
 class SegmentationDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -126,9 +168,19 @@ def train(encoder,
         val_mask_dir=None,
         dir_checkpoint=None,):
     
-
-    dataset = SegmentationDataset(root_dir='path/to/dataset', transform=transform)
-    data_loader = DataLoader(dataset, batch_size=4, shuffle=True, num_workers=4)
+    
+    # dataset = SegmentationDataset(root_dir='path/to/dataset', transform=transform)
+    
+    train_set = torchvision.datasets.CocoDetection(root = 'data/mini/train',
+                                                   annFile= 'data/mini/train/_annotations.coco.json')
+    
+    coco_set = CocoDataset(img_dir='data/mini/train',
+                           anno_file='data/mini/train/_annotations.coco.json')
+    ipdb.set_trace()
+    
+    data_loader = DataLoader(train_set, batch_size=1, shuffle=True, num_workers=4)
+    
+    ipdb.set_trace()
 
     for params in encoder.parameters():
         params.requires_grad = False
@@ -140,7 +192,7 @@ def train(encoder,
     for epo in range(epochs):
         step += 1
         for image, mask in data_loader:
-            enc_out = encoder(image)
+            enc_out = encoder.sample_frame(image)
             dec_out = decoder(enc_out)
             #change the image mask
             loss_val = loss(dec_out, mask)
@@ -182,26 +234,31 @@ def train(encoder,
 
 
 
-if __name__ == "main":
-    encoder = 
+if __name__ == "__main__":
+     
     decoder = seghead(n_classes= 2)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train(encoder,
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ckpt', type=str, default='bair_gpt')
+    parser.add_argument('--n', type=int, default=1)
+    args = parser.parse_args()
+    n = args.n
+
+    if not os.path.exists(args.ckpt):
+        gpt = load_videogpt(args.ckpt)
+    else:
+        gpt = VideoGPT.load_from_checkpoint(args.ckpt)
+    gpt = gpt.cuda()
+    gpt.eval()
+    
+    train(gpt,
         decoder,   
         device,
-        epochs: int = 5,
-        batch_size: int = 1,
-        learning_rate: float = 1e-5,
-        val_frequency: float = 0.5,
-        save_checkpoint: bool = True,
-        weight_decay: float = 1e-8,
-        momentum: float = 0.999,
-        gradient_clipping: float = 1.0,
-        train_images_dir=None,
-        train_mask_dir=None,
-        val_images_dir=None,
-        val_mask_dir=None,
-        dir_checkpoint=None,)
+        epochs = 5,
+        batch_size = 1,
+        learning_rate = 1e-5,
+        val_frequency = 0.5)
     
 
 
