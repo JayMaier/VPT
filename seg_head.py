@@ -23,25 +23,40 @@ class seghead(nn.Module):
     def __init__(self, n_classes):
         super(seghead, self).__init__()
 
-        self.latent = [8, 2, 32]
+        self.latent = [1, 4, 32, 32]
         self.classes = n_classes
 
         self.decode1 = nn.Sequential(
-            nn.ConvTranspose2d(self.latent[0], 4, 2, 2, padding = 0),
-            nn.BatchNorm2d(4),
+            nn.ConvTranspose2d(self.latent[1], self.classes, 2, 2, padding = 0),
+            nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
 
         self.decode2 = nn.Sequential(
-            nn.ConvTranspose2d(4, self.classes, 2, 2, padding = 0), 
+            nn.ConvTranspose2d(4, 4, 3, 1, padding = 1),
+            nn.BatchNorm2d(4),
+            nn.ReLU(inplace= True)
+        )
+
+        self.decode3 = nn.Sequential(
+            nn.ConvTranspose2d(4, 4, 1, 1, padding = 0),
+            nn.BatchNorm2d(4),
+            nn.ReLU(inplace= True)
+        )
+
+        self.decode4 = nn.Sequential(
+            nn.ConvTranspose2d(4, 4, 3, 1, padding = 1), 
             nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
 
     def forward(self, x):
+        x = x.type(torch.cuda.FloatTensor).cuda()
         y = self.decode1(x)
-        out = self.decode2(y)
-        return out
+        #y = self.decode2(y)
+        #y = self.decode3(y)
+        #y = self.decode4(y)
+        return y
 
 def dice_coeff(input, target, reduce_batch_first= False, epsilon= 1e-6):
     # Average of Dice coefficient for all batches, or for a single mask
@@ -70,21 +85,22 @@ def dice_loss(input, target, multiclass: bool = False):
     
 def loss(pred, gt, n_classes = 2):
 
-    if n_classes == 1:
-        crit_2 = dice_loss(F.sigmoid(pred.squeeze(1)), gt.float(), multiclass=False)
-    else:
-        crit_2 = dice_loss(
-            F.softmax(pred, dim=1).float(),
-            F.one_hot(gt, n_classes).permute(0, 3, 1, 2).float(),
-            multiclass=True
-        )
-
-    crit_1 = nn.BCEWithLogitsLoss(pos_weight= 10)
-    loss = crit_1(pred, gt) + crit_2
+    # if n_classes == 1:
+    #     crit_2 = dice_loss(F.sigmoid(pred.squeeze(1)), gt.float(), multiclass=False)
+    # else:
+    #     crit_2 = dice_loss(
+    #         F.softmax(pred, dim=1).float(),
+    #         F.one_hot(gt, n_classes).permute(0, 3, 1, 2).float(),
+    #         multiclass=True
+    #     )
+    pos_weights = torch.ones_like(gt)
+    #ipdb.set_trace()
+    crit_1 = nn.BCEWithLogitsLoss(pos_weight= pos_weights)
+    loss = crit_1(pred, gt.cuda())# + crit_2
     return loss
 
 
-class CocoDataset(Dataset):
+class Coco_Dataset(Dataset):
     def __init__(self, img_dir, anno_file, transform=None):
         self.img_dir = img_dir
         self.anno_file = anno_file
@@ -96,51 +112,35 @@ class CocoDataset(Dataset):
         return len(self.coco.imgs)
     
     def __getitem__(self, index):
+        index = 0
         img = self.coco.imgs[index]
         # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
         image = torchvision.io.read_image(os.path.join(self.img_dir, img['file_name']))
         image = self.im2float(image)
         
-        anns_ids = self.coco.getAnnIds(imgIds=img['id'], catIds=self.cat_ids, iscrowd=None)
-        anns = self.coco.loadAnns(anns_ids)
+        anns_ids_1 = self.coco.getAnnIds(imgIds=img['id'], catIds=1, iscrowd=None)
+        anns_1 = self.coco.loadAnns(anns_ids_1)
         
+
+        anns_ids_2 = self.coco.getAnnIds(imgIds=img['id'], catIds=2, iscrowd=None)
+        anns_2 = self.coco.loadAnns(anns_ids_2)
         ### TODO: DANGER!!! do we get every class every time ? ###
-        mask = np.zeros((len(anns), image.shape[1], image.shape[2]))
+        mask = np.zeros((len(self.cat_ids)-1, image.shape[1], image.shape[2]))
         # mask = self.coco.annToMask(anns[0])
-        for i in range(0, len(anns)):
-            mask[i] += self.coco.annToMask(anns[i])
-            
+        # print('cat ids', self.cat_ids)
+        # ipdb.set_trace()
+        
+        for i in range(0, len(anns_1)):
+            mask[0] += self.coco.annToMask(anns_1[i])
+
+        for i in range(0, len(anns_2)):
+            mask[1] += self.coco.annToMask(anns_2[i])
+        
         mask = torch.tensor(mask)
+        mask = mask.clamp(0, 1)
         return image, mask
         
         
-        
-        
-class SegmentationDataset(Dataset):
-    def __init__(self, root_dir, transform=None):
-        self.root_dir = root_dir
-        self.transform = transform
-        self.images_dir = os.path.join(root_dir, 'images')
-        self.masks_dir = os.path.join(root_dir, 'masks')
-        self.image_filenames = os.listdir(self.images_dir)
-
-    def __len__(self):
-        return len(self.image_filenames)
-
-    def __getitem__(self, idx):
-        img_name = os.path.join(self.images_dir, self.image_filenames[idx])
-        mask_name = os.path.join(self.masks_dir, self.image_filenames[idx].replace('.jpg', '_mask.png'))
-
-        image = Image.open(img_name).convert('RGB')
-        mask = Image.open(mask_name)
-
-        if self.transform:
-            image = self.transform(image)
-            mask = self.transform(mask)
-
-            #fix this to get after the COCO dataset
-
-        return image, mask
 
 
 transform = transforms.Compose([
@@ -158,13 +158,12 @@ def train(encoder,
         learning_rate: float = 1e-5,
         val_frequency: float = 0.5,
         save_checkpoint_every = 10000,
-        weight_decay: float = 1e-8,
-        momentum: float = 0.999,
+        weight_decay: float = 9,
         gradient_clipping: float = 1.0,
         train_images_dir=None,
         train_mask_dir=None,
         val_images_dir=None,
-        show_mask_every = 100, 
+        show_mask_every = 1, 
         val_mask_dir=None,
         dir_checkpoint=None,):
     
@@ -173,14 +172,14 @@ def train(encoder,
     
     train_set = torchvision.datasets.CocoDetection(root = 'data/mini/train',
                                                    annFile= 'data/mini/train/_annotations.coco.json')
-    
-    coco_set = CocoDataset(img_dir='data/mini/train',
+    # ipdb.set_trace()
+    coco_set = Coco_Dataset(img_dir='data/mini/train',
                            anno_file='data/mini/train/_annotations.coco.json')
-    ipdb.set_trace()
+    # ipdb.set_trace()
     
-    data_loader = DataLoader(train_set, batch_size=1, shuffle=True, num_workers=4)
+    data_loader = DataLoader(coco_set, batch_size=1, shuffle=True, num_workers=4)
     
-    ipdb.set_trace()
+    # ipdb.set_trace()
 
     for params in encoder.parameters():
         params.requires_grad = False
@@ -190,9 +189,11 @@ def train(encoder,
     step = 0
 
     for epo in range(epochs):
-        step += 1
         for image, mask in data_loader:
-            enc_out = encoder.sample_frame(image)
+            step += 1
+            image = image.cuda()
+            mask = mask.cuda()
+            enc_out = encoder.sample_frame(batch_size, image)
             dec_out = decoder(enc_out)
             #change the image mask
             loss_val = loss(dec_out, mask)
@@ -204,7 +205,7 @@ def train(encoder,
             optimizer.step()
 
             if step % val_frequency == 0:
-                print("loss at step ", step, " :" , loss_val.detach().numpy())
+                print("loss at step ", step, " :" , loss_val.cpu().detach().numpy())
 
             #save model 
             if step % save_checkpoint_every == 0:
@@ -212,31 +213,28 @@ def train(encoder,
 
             #display results
             if step % show_mask_every == 0:
-                image_np = dec_out.numpy()
+                image_np = dec_out.cpu().detach().numpy()
 
                 # If your tensor has a batch dimension, remove it
                 if len(image_np.shape) == 4:
                     image_np = image_np.squeeze(0)
 
                 # If your image is in channel-first format, transpose it to channel-last format (optional)
-                if image_np.shape[0] == 3:
-                    image_np = image_np.transpose(1, 2, 0)
-
-                # Plot the image
-                plt.imshow(image_np)
-                plt.axis('off')  # Turn off axis
-
-                # Save the image
-                plt.savefig('output_image.png', bbox_inches='tight', pad_inches=0)
-
-                # Show the image (optional)
-                plt.show()
-
+                #if image_np.shape[0] == 3:
+                #    image_np = image_np.transpose(1, 2, 0)
+                #ipdb.set_trace()
+                channel_1 = Image.fromarray(image_np[0])
+                channel_2 = Image.fromarray(image_np[1])
+                name1 = "channel_1_" + str(step) + ".png"
+                name2 = "channel_2_" + str(step) +".png"
+                channel_1.convert("RGB").save(name1)
+                channel_2.convert("RGB").save(name2)
+                
 
 
 if __name__ == "__main__":
      
-    decoder = seghead(n_classes= 2)
+    decoder = seghead(n_classes= 2).cuda()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     parser = argparse.ArgumentParser()
