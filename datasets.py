@@ -18,7 +18,7 @@ class Coco_Dataset(Dataset):
         return len(self.coco.imgs)
     
     def __getitem__(self, index):
-        index = 0
+        # index = 0
         img = self.coco.imgs[index]
         # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
         image = torchvision.io.read_image(os.path.join(self.img_dir, img['file_name']))
@@ -58,7 +58,7 @@ class Coco_Dataset_embedder(Dataset):
         return len(self.coco.imgs)
     
     def __getitem__(self, index):
-        index = 0
+        # index = 0
         img = self.coco.imgs[index]
         # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
         pth = os.path.join(self.img_dir, img['file_name'])
@@ -101,7 +101,7 @@ class Coco_Dataset_Embeddings(Dataset):
         return len(self.coco.imgs)
     
     def __getitem__(self, index):
-        index = 0
+        # index = 0
         img = self.coco.imgs[index]
         # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
         image = torch.load(os.path.join(self.embedding_dir, img['file_name']))
@@ -115,7 +115,7 @@ class Coco_Dataset_Embeddings(Dataset):
 
 
         ### TODO: DANGER!!! do we get every class every time ? ###
-        mask = np.zeros((len(self.cat_ids)-1, image.shape[1], image.shape[2]))
+        mask = np.zeros((len(self.cat_ids)-1, 64, 64))
 
         for i in range(0, len(anns_1)):
             mask[0] += self.coco.annToMask(anns_1[i])
