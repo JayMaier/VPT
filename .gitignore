@@ -1,1 +1,4 @@
 data/*
+*.pt
+*.gif
+*/wandb/*
