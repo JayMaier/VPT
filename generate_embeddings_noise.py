@@ -36,9 +36,11 @@ data_loader = DataLoader(coco_set, batch_size=1, shuffle=True, num_workers=4)
 
 for img, msk, pth in data_loader:
 
-    enc_out = gpt.sample_frame(1, img)
+    # enc_out = gpt.sample_frame(1, img)
     # ipdb.set_trace()
-    emb_pth = os.path.join(img_dir, 'emb', pth[0])
+    enc_out = torch.rand((1, 4, 32, 32))
+    # ipdb.set_trace()
+    emb_pth = os.path.join(img_dir, 'emb_noise', pth[0])
     torch.save(enc_out, emb_pth)
     print("saved embedding to: ", emb_pth)
 

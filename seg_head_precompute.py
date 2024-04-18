@@ -31,13 +31,13 @@ class seghead(nn.Module):
         self.classes = n_classes
 
         self.decode1 = nn.Sequential(
-            nn.ConvTranspose2d(self.latent[1], 128, 2, 2, padding = 0),
+            nn.ConvTranspose2d(self.latent[1], 8, 2, 2, padding = 0),
             # nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
 
         self.decode2 = nn.Sequential(
-            nn.Conv2d(128, self.classes, 3, 1, padding = 1),
+            nn.Conv2d(8, self.classes, 3, 1, padding = 1),
             # nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
@@ -77,12 +77,11 @@ class seghead(nn.Module):
         x1 = self.decode1(x)
         # self.fc(x)
         
-        x2 = self.decode2(x1) #+ x1
-        # x3 = self.decode3(x2) #+ x2
+        # x2 = self.decode2(x1) #+ x1
+        # x3 = self.decode3(x2) 
         # x4 = self.decode4(x3) #+ x3
         # x4 = F.sigmoid(x4)
-        return x2
-
+        return x1
 def loss(pred, gt):
 
    
@@ -112,8 +111,8 @@ def train(
         dir_checkpoint=None,):
     
     # ipdb.set_trace()
-    coco_set = Coco_Dataset_Embeddings(img_dir='data/mini/train',
-                           anno_file='data/mini/train/_annotations.coco.json')
+    coco_set = Coco_Dataset_Embeddings_Noise(img_dir='data/small/train',
+                           anno_file='data/small/train/_annotations.coco.json')
     # ipdb.set_trace()
     
     data_loader = DataLoader(coco_set)
@@ -156,11 +155,17 @@ def train(
 
             #display results
             if step % show_mask_every == 0:
-                image_np = F.sigmoid(dec_out).cpu().detach().numpy()
+                thresh = 0.5
+                # ipdb.set_trace()
+                # image_np = F.sigmoid(dec_out).cpu().detach().numpy()
+                out_mask = np.zeros((64, 64))
+                out_mask[F.sigmoid(dec_out).cpu()[0, 0] > thresh] = 1
+                
+                # image_np = torch.where(dec_out).cpu().detach().numpy()
 
-                # If your tensor has a batch dimension, remove it
-                if len(image_np.shape) == 4:
-                    image_np = image_np.squeeze(0)
+                # # If your tensor has a batch dimension, remove it
+                # if len(image_np.shape) == 4:
+                #     image_np = image_np.squeeze(0)
 
                 # If your image is in channel-first format, transpose it to channel-last format (optional)
                 #if image_np.shape[0] == 3:
@@ -168,7 +173,7 @@ def train(
                 # ipdb.set_trace()
                 # ipdb.set_trace()
                 channel_1 = Image.fromarray(mask[0].cpu().numpy()*255)
-                channel_2 = Image.fromarray(image_np[0]*255)
+                channel_2 = Image.fromarray(out_mask*255)
                 name1 = "channel_1_" + str(step) + ".png"
                 name2 = "channel_2_" + str(step) +".png"
                 channel_1.convert("RGB").save(name1)
@@ -195,7 +200,7 @@ if __name__ == "__main__":
         device,
         epochs = 5000,
         batch_size = 1,
-        learning_rate = 1e-5,
+        learning_rate = 1e-6,
         )
     
 
