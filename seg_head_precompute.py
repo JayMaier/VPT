@@ -20,6 +20,9 @@ import ipdb
 import pycocotools
 from datasets import *
 
+import segmentation_models_pytorch.losses as Loss
+
+
 class seghead(nn.Module):
     def __init__(self, n_classes):
         super(seghead, self).__init__()
@@ -34,57 +37,60 @@ class seghead(nn.Module):
         )
 
         self.decode2 = nn.Sequential(
-            nn.ConvTranspose2d(4, 4, 3, 1, padding = 1),
-            nn.BatchNorm2d(4),
+            nn.ConvTranspose2d(self.classes, self.classes, 3, 1, padding = 1),
+            nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
 
         self.decode3 = nn.Sequential(
-            nn.ConvTranspose2d(4, 4, 1, 1, padding = 0),
-            nn.BatchNorm2d(4),
+            nn.ConvTranspose2d(self.classes, self.classes, 1, 1, padding = 0),
+            nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
 
         self.decode4 = nn.Sequential(
-            nn.ConvTranspose2d(4, 4, 3, 1, padding = 1), 
+            nn.ConvTranspose2d(self.classes, self.classes, 3, 1, padding = 1), 
             nn.BatchNorm2d(self.classes),
             nn.ReLU(inplace= True)
         )
 
     def forward(self, x):
+        #or squueze at 1
+        x = x.squeeze(0)
         x = x.type(torch.cuda.FloatTensor).cuda()
-        y = self.decode1(x)
-        #y = self.decode2(y)
-        #y = self.decode3(y)
-        #y = self.decode4(y)
-        return y
+        x1 = self.decode1(x)
+        x2 = self.decode2(x1) + x1
+        x3 = self.decode3(x2) + x2
+        x4 = self.decode4(x3) + x3
+        x4 = F.sigmoid(x4)
+        return x4
 
-def dice_coeff(input, target, reduce_batch_first= False, epsilon= 1e-6):
-    # Average of Dice coefficient for all batches, or for a single mask
-    assert input.size() == target.size()
-    assert input.dim() == 3 or not reduce_batch_first
+# def dice_coeff(input, target, reduce_batch_first= False, epsilon= 1e-6):
+#     # Average of Dice coefficient for all batches, or for a single mask
+#     assert input.size() == target.size()
+#     assert input.dim() == 3 or not reduce_batch_first
 
-    sum_dim = (-1, -2) if input.dim() == 2 or not reduce_batch_first else (-1, -2, -3)
+#     sum_dim = (-1, -2) if input.dim() == 2 or not reduce_batch_first else (-1, -2, -3)
 
-    inter = 2 * (input * target).sum(dim=sum_dim)
-    sets_sum = input.sum(dim=sum_dim) + target.sum(dim=sum_dim)
-    sets_sum = torch.where(sets_sum == 0, inter, sets_sum)
+#     inter = 2 * (input * target).sum(dim=sum_dim)
+#     sets_sum = input.sum(dim=sum_dim) + target.sum(dim=sum_dim)
+#     sets_sum = torch.where(sets_sum == 0, inter, sets_sum)
 
-    dice = (inter + epsilon) / (sets_sum + epsilon)
-    return dice.mean()
-
-
-def multiclass_dice_coeff(input, target, reduce_batch_first = False, epsilon = 1e-6):
-    # Average of Dice coefficient for all classes
-    return dice_coeff(input.flatten(0, 1), target.flatten(0, 1), reduce_batch_first, epsilon)
+#     dice = (inter + epsilon) / (sets_sum + epsilon)
+#     return dice.mean()
 
 
-def dice_loss(input, target, multiclass: bool = False):
-    # Dice loss (objective to minimize) between 0 and 1
-    fn = multiclass_dice_coeff if multiclass else dice_coeff
-    return 1 - fn(input, target, reduce_batch_first=True)
+# def multiclass_dice_coeff(input, target, reduce_batch_first = False, epsilon = 1e-6):
+#     # Average of Dice coefficient for all classes
+#     return dice_coeff(input.flatten(0, 1), target.flatten(0, 1), reduce_batch_first, epsilon)
+
+
+# def dice_loss(input, target, multiclass: bool = False):
+#     # Dice loss (objective to minimize) between 0 and 1
+#     fn = multiclass_dice_coeff if multiclass else dice_coeff
+#     return 1 - fn(input, target, reduce_batch_first=True)
     
-def loss(pred, gt, n_classes = 2):
+def loss(pred, gt, dice_fun, n_classes):
 
     # if n_classes == 1:
     #     crit_2 = dice_loss(F.sigmoid(pred.squeeze(1)), gt.float(), multiclass=False)
@@ -94,10 +100,12 @@ def loss(pred, gt, n_classes = 2):
     #         F.one_hot(gt, n_classes).permute(0, 3, 1, 2).float(),
     #         multiclass=True
     #     )
-    pos_weights = torch.ones_like(gt)
+
+    weight = 1 / (torch.mean(gt))
+    pos_wei = torch.ones_like(gt) * weight
+    BCE_fun = nn.BCEWithLogitsLoss(pos_weight= pos_wei)
     #ipdb.set_trace()
-    crit_1 = nn.BCEWithLogitsLoss(pos_weight= pos_weights)
-    loss = crit_1(pred, gt.cuda())# + crit_2
+    loss = BCE_fun(pred, gt) + dice_fun(pred, gt)
     return loss
 
 
@@ -154,17 +162,17 @@ transform = transforms.Compose([
 def train(encoder,
         decoder,   
         device,
-        epochs: int = 5,
-        batch_size: int = 1,
-        learning_rate: float = 1e-5,
-        val_frequency: float = 0.5,
+        epochs = 1000,
+        batch_size = 1,
+        learning_rate = 1e-4,
+        val_frequency =  10,
         save_checkpoint_every = 10000,
         weight_decay: float = 9,
         gradient_clipping: float = 1.0,
         train_images_dir=None,
         train_mask_dir=None,
         val_images_dir=None,
-        show_mask_every = 1, 
+        show_mask_every = 1000, 
         val_mask_dir=None,
         dir_checkpoint=None,):
     
@@ -189,8 +197,15 @@ def train(encoder,
     batches = len(data_loader)
     step = 0
 
+    dice_fun = Loss.DiceLoss(mode = "multilabel")
+
+    lr_schedule = optim.lr_scheduler.ExponentialLR(optimizer, gamma= 0.99)
+
+
     for epo in range(epochs):
         for image, mask in data_loader:
+
+            # ipdb.set_trace()
             step += 1
             image = image.cuda()
             mask = mask.cuda()
@@ -198,7 +213,7 @@ def train(encoder,
             enc_out = image
             dec_out = decoder(enc_out)
             #change the image mask
-            loss_val = loss(dec_out, mask)
+            loss_val = loss(pred= dec_out, gt = mask, dice_fun = dice_fun , n_classes= 2)
 
             optimizer.zero_grad()
 
@@ -224,13 +239,15 @@ def train(encoder,
                 # If your image is in channel-first format, transpose it to channel-last format (optional)
                 #if image_np.shape[0] == 3:
                 #    image_np = image_np.transpose(1, 2, 0)
-                #ipdb.set_trace()
+                # ipdb.set_trace()
+                
                 channel_1 = Image.fromarray(image_np[0])
                 channel_2 = Image.fromarray(image_np[1])
                 name1 = "channel_1_" + str(step) + ".png"
                 name2 = "channel_2_" + str(step) +".png"
                 channel_1.convert("RGB").save(name1)
                 channel_2.convert("RGB").save(name2)
+            
                 
 
 
@@ -255,10 +272,10 @@ if __name__ == "__main__":
     train(gpt,
         decoder,   
         device,
-        epochs = 5,
+        epochs = 5000,
         batch_size = 1,
-        learning_rate = 1e-5,
-        val_frequency = 0.5)
+        learning_rate = 1e-3,
+        val_frequency = 2)
     
 
 

@@ -101,7 +101,7 @@ class Coco_Dataset_Embeddings(Dataset):
         return len(self.coco.imgs)
     
     def __getitem__(self, index):
-        # index = 0
+        index = 0
         img = self.coco.imgs[index]
         # image = torch.tensor(np.array(Image.open(os.path.join(self.img_dir, img['file_name']))))
         image = torch.load(os.path.join(self.embedding_dir, img['file_name']))
