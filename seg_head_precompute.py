@@ -62,25 +62,16 @@ class seghead(nn.Module):
         
 
     def forward(self, x):
-        #or squueze at 1
-        # ipdb.set_trace()
         x = x.squeeze(1)
         x = x.type(torch.cuda.FloatTensor).cuda()
         
-        # ipdb.set_trace()
-        # thing = x.flatten()
-        # newthing = self.fc(thing)
-        # x4 = newthing.view(1, 2, 64, 64)
         x = self.fc(x.flatten()).view(1, 4, 32, 32)
         x = self.relu(x)
         
         x1 = self.decode1(x)
-        # self.fc(x)
         
-        x2 = self.decode2(x1) #+ x1
-        # x3 = self.decode3(x2) #+ x2
-        # x4 = self.decode4(x3) #+ x3
-        # x4 = F.sigmoid(x4)
+        x2 = self.decode2(x1) 
+
         return x2
 
 def loss(pred, gt):
@@ -89,8 +80,8 @@ def loss(pred, gt):
     weight = 1 / (torch.mean(gt))
     pos_wei = torch.ones_like(gt) * weight
     BCE_fun = nn.BCEWithLogitsLoss()
-    # ipdb.set_trace()
-    loss = BCE_fun(pred[0, 0], gt[0]) #+ dice_fun(pred, gt)
+    
+    loss = BCE_fun(pred[0, 0], gt[0])
     return loss
 
 
@@ -111,15 +102,11 @@ def train(
         val_mask_dir=None,
         dir_checkpoint=None,):
     
-    # ipdb.set_trace()
+    
     coco_set = Coco_Dataset_Embeddings(img_dir='data/mini/train',
                            anno_file='data/mini/train/_annotations.coco.json')
-    # ipdb.set_trace()
     
     data_loader = DataLoader(coco_set)
-    
-    # ipdb.set_trace()
-
 
     optimizer = optim.Adam(decoder.parameters(), lr = learning_rate)
     
@@ -135,7 +122,7 @@ def train(
             step += 1
             image = image.cuda()
             mask = mask.cuda()
-            # enc_out = encoder.sample_frame(batch_size, image)
+
             enc_out = image
             dec_out = decoder(enc_out)
             #change the image mask
@@ -150,31 +137,6 @@ def train(
             if step % val_frequency == 0:
                 print("loss at step ", step, " :" , loss_val.cpu().detach().numpy())
 
-            #save model 
-            # if step % save_checkpoint_every == 0:
-            #     torch.save(encoder.state_dict(), dir_checkpoint)
-
-            #display results
-            if step % show_mask_every == 0:
-                image_np = F.sigmoid(dec_out).cpu().detach().numpy()
-
-                # If your tensor has a batch dimension, remove it
-                if len(image_np.shape) == 4:
-                    image_np = image_np.squeeze(0)
-
-                # If your image is in channel-first format, transpose it to channel-last format (optional)
-                #if image_np.shape[0] == 3:
-                #    image_np = image_np.transpose(1, 2, 0)
-                # ipdb.set_trace()
-                # ipdb.set_trace()
-                channel_1 = Image.fromarray(mask[0].cpu().numpy()*255)
-                channel_2 = Image.fromarray(image_np[0]*255)
-                name1 = "channel_1_" + str(step) + ".png"
-                name2 = "channel_2_" + str(step) +".png"
-                channel_1.convert("RGB").save(name1)
-                channel_2.convert("RGB").save(name2)
-            
-                
 
 
 if __name__ == "__main__":
