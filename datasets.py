@@ -111,7 +111,7 @@ class Coco_Dataset_Embeddings(Dataset):
         # anns_1 = self.coco.loadAnns(anns_ids_1)
         
 
-        anns_ids_2 = self.coco.getAnnIds(imgIds=img['id'], catIds=2, iscrowd=None)
+        anns_ids_2 = self.coco.getAnnIds(imgIds=img['id'], catIds=1, iscrowd=None)
         anns_2 = self.coco.loadAnns(anns_ids_2)
 
 

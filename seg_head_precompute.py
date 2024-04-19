@@ -84,12 +84,17 @@ class seghead(nn.Module):
         return x2
 def loss(pred, gt):
 
-   
-    weight = 1 / (torch.mean(gt))
-    pos_wei = torch.ones_like(gt) * weight
-    BCE_fun = nn.BCEWithLogitsLoss()
+    if torch.mean(gt) > 0.0001:
+        weight = 1 / (torch.mean(gt))
+        pos_wei = torch.ones_like(gt) * weight
+        # print('stuff')
+            
+            
+        BCE_fun = nn.BCEWithLogitsLoss(pos_weight=pos_wei)
+    else:
+        BCE_fun = nn.BCEWithLogitsLoss()
     # ipdb.set_trace()
-    loss = BCE_fun(pred[0, 0], gt[0]) #+ dice_fun(pred, gt)
+    loss = BCE_fun(pred[0], gt) #+ dice_fun(pred, gt)
     return loss
 
 
@@ -111,7 +116,7 @@ def train(
         dir_checkpoint=None,):
     
     # ipdb.set_trace()
-    coco_set = Coco_Dataset_Embeddings_Noise(img_dir='data/small/train',
+    coco_set = Coco_Dataset_Embeddings(img_dir='data/small/train',
                            anno_file='data/small/train/_annotations.coco.json')
     # ipdb.set_trace()
     
@@ -129,18 +134,19 @@ def train(
 
     for epo in range(epochs):
         for image, mask in data_loader:
-
+            optimizer.zero_grad()
             # ipdb.set_trace()
             step += 1
             image = image.cuda()
             mask = mask.cuda()
+            # ipdb.set_trace()
             # enc_out = encoder.sample_frame(batch_size, image)
             enc_out = image
             dec_out = decoder(enc_out)
             #change the image mask
             loss_val = loss(pred= dec_out, gt = mask)
 
-            optimizer.zero_grad()
+            
 
             loss_val.backward()
 
@@ -201,7 +207,7 @@ if __name__ == "__main__":
         device,
         epochs = 5000,
         batch_size = 1,
-        learning_rate = 1e-6,
+        learning_rate = 1e-5,
         )
     
 
