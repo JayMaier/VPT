@@ -25,6 +25,7 @@ import pycocotools
 from datasets import *
 
 import segmentation_models_pytorch.losses as Loss
+import segmentation_models_pytorch as smp
 
 
 class seghead(nn.Module):
@@ -104,8 +105,8 @@ def bce(pred, gt):
         BCE_fun = nn.BCEWithLogitsLoss(pos_weight=pos_wei)
     else:
         BCE_fun = nn.BCEWithLogitsLoss()
-
-    loss = BCE_fun(pred[0], gt) 
+    
+    loss = BCE_fun(pred.squeeze(1), gt) 
     return loss
 
 def jacard(pred, gt):
@@ -113,11 +114,6 @@ def jacard(pred, gt):
     return jac(pred, gt)
 
 
-# def loss(pred, gt):
-#     weight = 1 / (torch.mean(gt))
-#     pos_wei = torch.ones_like(gt) * weight
-#     BCE_fun = nn.BCEWithLogitsLoss()
-#     loss = BCE_fun(pred[0, 0], gt[0]) #+ dice_fun(pred, gt)
 
 def loss(pred, gt, mode):
     if mode == "b":
@@ -170,19 +166,20 @@ def train(
     train_coco, val_coco = torch.utils.data.random_split(coco_set, [train_size, val_size])
     
     train_data_loader = DataLoader(train_coco, batch_size= batch_size)
-    val_data_loader = DataLoader(val_coco, batch_size= batch_size)
+    val_data_loader = DataLoader(val_coco, batch_size=1)
     if opt == "ADAM":
         optimizer = optim.Adam(decoder.parameters(), lr = learning_rate)
     if opt == "ADAM_W":
         optimizer = optim.AdamW(decoder.parameters(), lr = learning_rate)
+    if opt == "SGD":
+        optimizer = optim.SGD(decoder.parameters(), lr = learning_rate)
 
     if lr_sced:
         lr_scedule = schedule.ExponentialLR(optimizer= optimizer, gamma= lr_sced)
 
     step, step_val = 0, 0
 
-
-
+    iou_scores = []
     for epo in range(epochs):
         decoder.train()
         train_loss = 0
@@ -190,28 +187,25 @@ def train(
             step += 1
             image = image.to(device)
             mask = mask.to(device)
-            # ipdb.set_trace()
-            # enc_out = encoder.sample_frame(batch_size, image)
             enc_out = image
             dec_out = decoder(enc_out)
-
-    
             loss_val = loss(pred= dec_out, gt = mask, mode= loss_mode)
             optimizer.zero_grad()
             loss_val.backward()
             optimizer.step()
             train_loss += loss_val.cpu().detach().numpy()/len(train_data_loader)
+            if epo == epochs - 1:
+                        print('hi')
 
-            if step % save_checkpoint_every == 0:
-                torch.save(decoder.state_dict(), dir_checkpoint + str(step))
-
-        print("loss at epo ", epo, " : ",  train_loss)
-
-        if lr_sced:
-            lr_scedule.step()
-
-        if WDB and epo % show_mask_every == 0:
-            WDB.log({"train_loss" : train_loss})
+        decoder.eval()
+        iou_scores = 0
+        for image, mask in val_data_loader:
+            image = image.to(device)
+            mask = mask.to(device)
+            enc_out = image
+            dec_out = decoder(enc_out)           
+            tp, fp , fn , tn = smp.metrics.get_stats(output= dec_out.squeeze(1), target= mask.round().int(), mode = "binary", threshold = 0.5)
+            iou_scores += smp.metrics.iou_score(tp, fp, fn, tn, reduction= "micro")/len(val_data_loader)
             if epo % show_mask_every == 0:
                 image_np = torch.sigmoid(dec_out).cpu().detach().numpy()
                 #ipdb.set_trace()
@@ -226,126 +220,120 @@ def train(
                 actual_masks = wandb.Image(channel_1.convert("RGB"), caption = name2)
                 pred_masks = wandb.Image(channel_2.convert("RGB"), caption = name1)
 
-                WDB.log({"train actual masks ": actual_masks,
-                        "train pred masks ": pred_masks})
+                wandb.log({"train actual masks ": actual_masks,
+                        "train pred masks ": pred_masks})# ipdb.set_trace()
+        wandb.log({"iou score val": iou_scores, "train loss":train_loss})
+        print("loss at epo ", epo, " : ",  train_loss)
 
+        if lr_sced:
+            lr_scedule.step()
+        # ipdb.set_trace()
+        
+             
+    return iou_scores
 
-        if WDB and epo % show_mask_every == 0:
-            decoder.eval()
-            loss_epo = 0 
-            for image, mask in val_data_loader:
-                step_val += 1
-                image = image.cuda()
-                mask = mask.cuda()
-                enc_out = image
-                dec_out = decoder(enc_out)
-                loss_val = loss(pred= dec_out, gt = mask, mode= loss_mode)
-                loss_epo += loss_val.item()/len(val_data_loader)
+def obj(config):
+    decoder = seghead(n_classes= 1, dropout=config.dropout).cuda()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    
+    # ipdb.set_trace()
+    val_loss = train(
+        decoder = decoder,   
+        device = device,
+        epochs = config.epochs,
+        batch_size = config.batch_size,
+        learning_rate = config.learning_rate,
+        # WDB=run,
+        loss_mode = config.loss_mode,
+        lr_sced= config.lr_sced,
+        opt = config.opt
+        )
+    return val_loss      
+def test():
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    run = wandb.init(project="VPT")
+    # wandb.init(wandb.config)
 
-            image_np = torch.sigmoid(dec_out).cpu().detach().numpy()
-            # If your tensor has a batch dimension, remove it
-            if len(image_np.shape) == 4:
-                    image_np = image_np[0, 0, :, :]
-            if len(image_np.shape) == 3:
-                image_np = image_np[0, :, :]
-            channel_1 = Image.fromarray(mask[0].cpu().numpy()*255)
-            channel_2 = Image.fromarray(image_np*255)
-            name1 = "mask " + str(step_val)
-            name2 = "pred_mask" + str(step_val)
-            actual_masks = wandb.Image(channel_1.convert("RGB"), caption = name2)
-            pred_masks = wandb.Image(channel_2.convert("RGB"), caption = name1)
+    score = obj(wandb.config)
+    wandb.log({'score':score})
 
-            WDB.log({"validation actual masks ": actual_masks,
-                     "validation pred masks ": pred_masks,
-                     "validation loss": loss_epo})
-            # if step % val_frequency == 0:
-            #     print("loss at step ", step, " :" , loss_val.cpu().detach().numpy())
-
-            #save model 
-            # if step % save_checkpoint_every == 0:
-            #     torch.save(encoder.state_dict(), dir_checkpoint)
-
-            #display results
-            # if step % show_mask_every == 0:
-            #     thresh = 0.5
-            #     # ipdb.set_trace()
-            #     image_np = F.sigmoid(dec_out).cpu().detach().numpy()
-            #     out_mask = image_np[0, 0]
-            #     # out_mask = np.zeros((64, 64))
-            #     # out_mask[F.sigmoid(dec_out).cpu()[0, 0] > thresh] = 1
-                
-            #     # image_np = torch.where(dec_out).cpu().detach().numpy()
-
-            #     # # If your tensor has a batch dimension, remove it
-            #     # if len(image_np.shape) == 4:
-            #     #     image_np = image_np.squeeze(0)
-
-            #     # If your image is in channel-first format, transpose it to channel-last format (optional)
-            #     #if image_np.shape[0] == 3:
-            #     #    image_np = image_np.transpose(1, 2, 0)
-            #     # ipdb.set_trace()
-            #     # ipdb.set_trace()
-            #     channel_1 = Image.fromarray(mask[0].cpu().numpy()*255)
-            #     channel_2 = Image.fromarray(out_mask*255)
-            #     name1 = "channel_1_" + str(step) + ".png"
-            #     name2 = "channel_2_" + str(step) +".png"
-            #     channel_1.convert("RGB").save(name1)
-            #     channel_2.convert("RGB").save(name2)
 
 if __name__ == "__main__":
      
-    #decoder = seghead(n_classes= 1).cuda()
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--ckpt', type=str, default='bair_gpt')
-    parser.add_argument('--n', type=int, default=1)
-    args = parser.parse_args()
 
-    epochs = 50000
-    batch_size = 8
-    learning_rate = 0.0000214628224041428
-    loss_mode = "d"
-    lr_sced= 0.99
-    opt = "ADAM_W"
-    dropout = 0.25
     project = "VPT"
 
-
-
-    run = wandb.init(
-                project = project,
-                config={
-                    "epochs" : epochs,
-                    "optimizer" : opt,
-                    "batch size" : batch_size,
-                    "learning rate" : learning_rate,
-                    "lr sched": lr_sced,
-                    "loss mode": loss_mode,
-                    "dropout" : dropout
-
-                }
-            )
+    sweep_config = {
+        "method" : "random"
+    }
     
-    decoder = seghead(n_classes= 1, dropout= dropout).to(device)
+    metric = {
+        "name" : "loss",
+        "goal" : "minimize"
+    }
 
-    train(
-        decoder = decoder,   
-        device = device,
-        epochs = epochs,
-        batch_size = batch_size,
-        learning_rate = learning_rate,
-        wandb_freq = 1,
-        WDB = run,
-        loss_mode = loss_mode,
-        lr_sced= lr_sced,
-        opt = opt,
-        show_mask_every= 10,
-        )
+    sweep_config["metric"] = metric
+
+    parameters_dict ={
+        "opt":{
+            'values': ["ADAM"]
+        },
+        "loss_mode":{
+            'values': ["b", "d", "j"]
+        },
+        "lr_sced":{
+            "values": [0.999]
+
+        },
+        'dropout':{
+            'values': [0.25]
+        },
+        'epochs':{
+            "values": [3000]
+        },
+        "batch_size":{
+            "values": [1, 2, 8]
+        }
+    }
+
+    # parameters_dict ={
+    #     "opt":{
+    #         'values': ["ADAM", "ADAM_W", "SGD"]
+    #     },
+    #     "loss_mode":{
+    #         'values': ["b", "d", "j", "bd", "bj", "dj", "bdj"]
+    #     },
+    #     "lr_sced":{
+    #         "values": [0.999, 0.99, 0.9]
+
+    #     },
+    #     'dropout':{
+    #         'values': [0.0, 0.25, 0.5]
+    #     },
+    #     'epochs':{
+    #         "values": [300]
+    #     },
+    #     "batch_size":{
+    #         "values": [1, 2, 8, 32]
+    #     }
+    # }
+    parameters_dict.update({
+        "learning_rate":{
+            "distribution": "uniform",
+            "min" : 1e-6,
+            "max": 1e-4
+        }
+    })
+
+    sweep_config["parameters"] = parameters_dict
+
     
+    pprint.pprint(sweep_config)
+
+    sweep_id = wandb.sweep(sweep_config, project = project)
+
+    wandb.agent(sweep_id, function=test, count=100)
  
 
 
     
-
-
