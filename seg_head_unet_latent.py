@@ -173,8 +173,8 @@ def train(
                 actual_masks = wandb.Image(channel_1.convert("RGB"), caption = name2)
                 pred_masks = wandb.Image(channel_2.convert("RGB"), caption = name1)
 
-                wandb.log({"train actual masks ": actual_masks,
-                        "train pred masks ": pred_masks})# ipdb.set_trace()
+                wandb.log({"val actual masks ": actual_masks,
+                        "val pred masks ": pred_masks})# ipdb.set_trace()
         wandb.log({"iou score val": iou_scores, "train loss":train_loss})
             
 def obj(config):
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
     parameters_dict ={
         "opt":{
-            'values': ["ADAM"]
+            'values': ["unet from latent"]
         },
     }
 

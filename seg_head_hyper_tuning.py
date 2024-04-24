@@ -240,13 +240,13 @@ def obj(config):
     val_loss = train(
         decoder = decoder,   
         device = device,
-        epochs = config.epochs,
-        batch_size = config.batch_size,
+        # epochs = config.epochs,
+        # batch_size = config.batch_size,
         learning_rate = config.learning_rate,
         # WDB=run,
-        loss_mode = config.loss_mode,
-        lr_sced= config.lr_sced,
-        opt = config.opt
+        # loss_mode = config.loss_mode,
+        # lr_sced= config.lr_sced,
+        # opt = config.opt
         )
     return val_loss      
 def test():
